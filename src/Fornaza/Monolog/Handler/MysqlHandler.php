@@ -28,8 +28,11 @@ class MysqlHandler extends AbstractProcessingHandler
             'formatted'  => $record['formatted'],
             'created_at' => $record['datetime']->format('Y-m-d H:i:s')
         );
-
-        DB::connection()->table($this->table)->insert($data);
+        try {
+            DB::connection()->table($this->table)->insert($data);
+        } catch (\Exception $e) {
+           // Database isn't yet ready.
+        }
     }
 
 }
