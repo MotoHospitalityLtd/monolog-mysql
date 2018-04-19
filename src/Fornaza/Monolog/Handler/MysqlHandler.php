@@ -3,6 +3,7 @@
 namespace Fornaza\Monolog\Handler;
 
 use DB;
+use Exception;
 use Monolog\Logger;
 use Monolog\Handler\AbstractProcessingHandler;
 
@@ -13,6 +14,7 @@ class MysqlHandler extends AbstractProcessingHandler
     public function __construct($table = 'logs', $level = Logger::DEBUG, $bubble = true)
     {
         $this->table = $table;
+        $this->db =
 
         parent::__construct($level, $bubble);
     }
@@ -28,9 +30,10 @@ class MysqlHandler extends AbstractProcessingHandler
             'formatted'  => $record['formatted'],
             'created_at' => $record['datetime']->format('Y-m-d H:i:s')
         );
+      
         try {
-            DB::connection()->table($this->table)->insert($data);
-        } catch (\Exception $e) {
+            app('db')->connection()->table($this->table)->insert($data);
+        } catch (Exception $e) {
            // Database isn't yet ready.
         }
     }
